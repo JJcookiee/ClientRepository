@@ -18,6 +18,13 @@ namespace Programming03Project
             County = county;
             PostCode = postCode;
         }
+        public Address()
+        {
+            HouseName = "";
+            Town = "";
+            County = "";
+            PostCode = "";
+        }
 
         public static string todb(Address address)
         {

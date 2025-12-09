@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using ClientRepository;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,14 +8,29 @@ namespace Programming03Project
 {
     internal class db
     {
-        public static void remove_details(string ClientId)
+        const string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDictionary|\CRS.mdf;Integrated Security=True";
+        public static void remove_client(string ClientId)
         {
-            string connstring = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\jacob\\source\\repos\\Programming03Project\\Programming03Project\\CRS.mdf;Integrated Security=True";
             string deleteQuery = "delete from clients where client_id = @client_id";
+            string selectAddressIdQuery = "select address_id from clients where client_id = @client_id";
+            string deleteAddressQuery = "delete from address where address_id = @address_id";
 
             SqlConnection connection = new(connstring);
 
             connection.Open();
+            using (SqlCommand command = new(selectAddressIdQuery, connection))
+            {
+                command.Parameters.AddWithValue("@client_id", ClientId);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                int address_id = reader.GetInt32(1);
+                reader.Close();
+                using (SqlCommand addressCommand = new(deleteAddressQuery, connection))
+                {
+                    addressCommand.Parameters.AddWithValue("@address_id", address_id);
+                    addressCommand.ExecuteNonQuery();
+                }
+            }
             using (SqlCommand command = new(deleteQuery, connection))
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
@@ -22,18 +38,11 @@ namespace Programming03Project
             }
             connection.Close();
         }
+
         public static List<Client> ClientList(bool ordered)
         {
-            string orderBy = "";
-
-            if (ordered)
-            {
-                orderBy = " order by client_name asc";
-            }
-
-            string connstring = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\jacob\\source\\repos\\Programming03Project\\Programming03Project\\CRS.mdf;Integrated Security=True";
-            string selectQuery = "select count(*) from graph";
-            string selectQuery2 = "select client_name, address, phone_number, email from clients" + orderBy;
+            string selectCountQuery = "select count(*) from graph";
+            string selectClientQuery = "select client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
 
             SqlConnection connection = new(connstring);
             SqlDataReader reader;
@@ -42,7 +51,7 @@ namespace Programming03Project
             List<Client> ClientList = new List<Client>();
 
             connection.Open();
-            using (SqlCommand command = new(selectQuery, connection))
+            using (SqlCommand command = new(selectCountQuery, connection))
             {
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -53,12 +62,13 @@ namespace Programming03Project
             for (int i = 0; i < count; i++)
             {
                 Client client = new Client();
-                using (SqlCommand command = new(selectQuery2, connection))
+                using (SqlCommand command = new(selectClientQuery, connection))
                 {
                     reader = command.ExecuteReader();
                     reader.Read();
                     client.Name = reader.GetString(0);
-                    client.Address = Address.fromdb(reader.GetString(1));
+                    int address_id = reader.GetInt32(1);
+                    client.Address = get_address(address_id);
                     client.PhoneNumber = reader.GetInt32(2);
                     client.Email = reader.GetString(3);
                     reader.Close();
@@ -66,8 +76,29 @@ namespace Programming03Project
                 }
             }
             connection.Close();
-
             return ClientList;
+        }
+
+        public static Address get_address(int address_id)
+        {
+            string selectAddressQuery = "select house_name, town, county, post_code from address where address_id = @address_id";
+            SqlConnection connection = new(connstring);
+            SqlDataReader reader;
+            Address address = new Address();
+            connection.Open();
+            using (SqlCommand command = new(selectAddressQuery, connection))
+            {
+                command.Parameters.AddWithValue("@address_id", address_id);
+                reader = command.ExecuteReader();
+                reader.Read();
+                address.HouseName = reader.GetString(0);
+                address.Town = reader.GetString(1);
+                address.County = reader.GetString(2);
+                address.PostCode = reader.GetString(3);
+                reader.Close();
+            }
+            connection.Close();
+            return address;
         }
     }
 }
