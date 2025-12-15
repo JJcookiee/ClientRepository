@@ -4,16 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Programming03Project 
+namespace ClientRepository
 {
     internal class db
     {
         const string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDictionary|\CRS.mdf;Integrated Security=True";
         public static void remove_client(string ClientId)
         {
-            string deleteQuery = "delete from clients where client_id = @client_id";
+            string deleteQuery = "delete * from clients where client_id = @client_id";
             string selectAddressIdQuery = "select address_id from clients where client_id = @client_id";
-            string deleteAddressQuery = "delete from address where address_id = @address_id";
+            string deleteAddressQuery = "delete * from address where address_id = @address_id";
+            string selectCatIdQuery = "select cat_id from clients where client_id = @client_id";
+            string deleteCatQuery = "delete * from categories where cat_id = @cat_id";
 
             SqlConnection connection = new(connstring);
 
@@ -31,6 +33,19 @@ namespace Programming03Project
                     addressCommand.ExecuteNonQuery();
                 }
             }
+            using (SqlCommand command = new(selectCatIdQuery, connection))
+            {
+                command.Parameters.AddWithValue("@client_id", ClientId);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                int cat_id = reader.GetInt32(1);
+                reader.Close();
+                using (SqlCommand addressCommand = new(deleteCatQuery, connection))
+                {
+                    addressCommand.Parameters.AddWithValue("@cat_id", cat_id);
+                    addressCommand.ExecuteNonQuery();
+                }
+            }
             using (SqlCommand command = new(deleteQuery, connection))
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
@@ -41,7 +56,7 @@ namespace Programming03Project
 
         public static List<Client> ClientList(bool ordered)
         {
-            string selectCountQuery = "select count(*) from graph";
+            string selectCountQuery = "select count(*) from clients";
             string selectClientQuery = "select client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
 
             SqlConnection connection = new(connstring);
@@ -71,6 +86,8 @@ namespace Programming03Project
                     client.Address = get_address(address_id);
                     client.PhoneNumber = reader.GetInt32(2);
                     client.Email = reader.GetString(3);
+                    int cat_id = reader.GetInt32(4);
+                    client.Categories = get_categories(cat_id);
                     reader.Close();
                     ClientList.Add(client);
                 }
@@ -99,6 +116,51 @@ namespace Programming03Project
             }
             connection.Close();
             return address;
+        }
+        public static List<Cat> get_categories(int cat_id)
+        {
+            string selectCatQuery = "select software, laptop_pcs, games, office_tools, accessories from categories where cat_id = @cat_id";
+            SqlConnection connection = new(connstring);
+            SqlDataReader reader;
+            List<Cat> cats = new List<Cat>();
+            connection.Open();
+            using (SqlCommand command = new(selectCatQuery, connection))
+            {
+                command.Parameters.AddWithValue("@cat_id", cat_id);
+                reader = command.ExecuteReader();
+                reader.Read();
+                for (int i = 0; i < 5; i++)
+                {
+                    Cat cat = new Cat();
+                    switch (i)
+                    {
+                        case 0:
+                            cat.cat = Cat.Category.Software;
+                            cat.Selected = reader.GetBoolean(0);
+                            break;
+                        case 1:
+                            cat.cat = Cat.Category.Laptop_PCs;
+                            cat.Selected = reader.GetBoolean(1);
+                            break;
+                        case 2:
+                            cat.cat = Cat.Category.Games;
+                            cat.Selected = reader.GetBoolean(2);
+                            break;
+                        case 3:
+                            cat.cat = Cat.Category.Office_Tools;
+                            cat.Selected = reader.GetBoolean(3);
+                            break;
+                        case 4:
+                            cat.cat = Cat.Category.Accessories;
+                            cat.Selected = reader.GetBoolean(4);
+                            break;
+                    }
+                    cats.Add(cat);
+                }
+                reader.Close();
+            }
+            connection.Close();
+            return cats;
         }
     }
 }

@@ -14,7 +14,6 @@ namespace ClientRepository
                 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'CRS') 
                 BEGIN
                     CREATE DATABASE CRS
-                    ON (NAME = CRS, FILENAME = '|DataDictionary|\CRS.mdf'); 
                 END";
             string createClientTableQuery = @"
                 IF OBJECT_ID('clients', 'U') IS NULL
@@ -22,9 +21,12 @@ namespace ClientRepository
                     CREATE TABLE clients (
                         client_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
                         client_name NVARCHAR(100) NOT NULL,
-                        address NVARCHAR(255) NOT NULL,
+                        address_id INT NOT NULL,
                         phone_number NVARCHAR(15) NOT NULL,
-                        email NVARCHAR(100) NOT NULL
+                        email NVARCHAR(100) NOT NULL,
+                        cat_id INT NOT NULL,
+                        FOREIGN KEY (address_id) REFERENCES address(address_id),
+                        FOREIGN KEY (cat_id) REFERENCES categories(cat_id)
                     );
                 END";
             string createAddressTableQuery = @"
@@ -38,6 +40,18 @@ namespace ClientRepository
                         postcode VARCHAR (10) NOT NULL,
                     );
                 END";
+            string createCatTableQuery = @"
+                IF OBJECT_ID('categories', 'U') IS NULL
+                BEGIN
+                    CREATE TABLE categories (
+                        cat_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+                        software bit default(0) not null,
+                        laptop_pcs bit default(0) not null,
+                        games bit default(0) not null,
+                        office_tools bit default(0) not null,
+                        accessories bit default(0) not null
+                    );
+                END";
             using (SqlConnection connection = new SqlConnection(connstring))
             {
                 connection.Open();
@@ -48,7 +62,7 @@ namespace ClientRepository
                 connection.Close();
             }
             // Connect to the newly created database to create the table
-            connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDictionary|\CRS.mdf;Integrated Security=True";
+            connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connstring))
             {
                 connection.Open();
@@ -57,6 +71,10 @@ namespace ClientRepository
                     command.ExecuteNonQuery();
                 }
                 using (SqlCommand command = new SqlCommand(createAddressTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (SqlCommand command = new SqlCommand(createCatTableQuery, connection))
                 {
                     command.ExecuteNonQuery();
                 }

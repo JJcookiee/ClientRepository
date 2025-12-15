@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Programming03Project
+namespace ClientRepository
 {
     internal class Client
     {
@@ -11,6 +11,7 @@ namespace Programming03Project
         public Address Address { get; set; }
         public int PhoneNumber { get; set; }
         public string Email { get; set; }
+        public List<Cat> Categories { get; set; }
 
     }
 }
