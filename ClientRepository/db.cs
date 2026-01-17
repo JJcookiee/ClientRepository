@@ -60,7 +60,7 @@ namespace ClientRepository
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
 
             string selectCountQuery = "select count(*) from clients";
-            string selectClientQuery = "select client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
+            string selectClientQuery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
 
             SqlConnection connection = new(connstring);
             SqlDataReader reader;

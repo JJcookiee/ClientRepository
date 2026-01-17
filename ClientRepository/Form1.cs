@@ -48,7 +48,7 @@ namespace ClientRepository
 
         
 
-            name = getName.Text.Trim(); 
+            name = getName.Text.Trim();
             House = getHouse.Text.Trim();
             Town = getTown.Text.Trim();
             County = getCounty.Text.Trim();
