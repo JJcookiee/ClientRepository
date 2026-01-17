@@ -8,9 +8,10 @@ namespace ClientRepository
 {
     internal class db
     {
-        const string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDictionary|\CRS.mdf;Integrated Security=True";
         public static void remove_client(string ClientId)
         {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True"; 
+            
             string deleteQuery = "delete * from clients where client_id = @client_id";
             string selectAddressIdQuery = "select address_id from clients where client_id = @client_id";
             string deleteAddressQuery = "delete * from address where address_id = @address_id";
@@ -56,6 +57,8 @@ namespace ClientRepository
 
         public static List<Client> ClientList(bool ordered)
         {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+
             string selectCountQuery = "select count(*) from clients";
             string selectClientQuery = "select client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
 
@@ -84,7 +87,7 @@ namespace ClientRepository
                     client.Name = reader.GetString(0);
                     int address_id = reader.GetInt32(1);
                     client.Address = get_address(address_id);
-                    client.PhoneNumber = reader.GetInt32(2);
+                    client.PhoneNumber = reader.GetString(2);
                     client.Email = reader.GetString(3);
                     int cat_id = reader.GetInt32(4);
                     client.Categories = get_categories(cat_id);
@@ -98,6 +101,8 @@ namespace ClientRepository
 
         public static Address get_address(int address_id)
         {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+
             string selectAddressQuery = "select house_name, town, county, post_code from address where address_id = @address_id";
             SqlConnection connection = new(connstring);
             SqlDataReader reader;
@@ -119,6 +124,8 @@ namespace ClientRepository
         }
         public static List<Cat> get_categories(int cat_id)
         {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+
             string selectCatQuery = "select software, laptop_pcs, games, office_tools, accessories from categories where cat_id = @cat_id";
             SqlConnection connection = new(connstring);
             SqlDataReader reader;

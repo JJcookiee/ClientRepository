@@ -13,43 +13,46 @@ namespace ClientRepository
             string createDBQuery = @"
                 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'CRS') 
                 BEGIN
-                    CREATE DATABASE CRS
+                    CREATE DATABASE CRS;
                 END";
-            string createClientTableQuery = @"
-                IF OBJECT_ID('clients', 'U') IS NULL
+
+            string createAddressTableQuery = @"
+                IF OBJECT_ID('dbo.address', 'U') IS NULL
                 BEGIN
-                    CREATE TABLE clients (
+                    CREATE TABLE dbo.address (
+                        address_id INT PRIMARY KEY IDENTITY (1, 1) NOT NULL,
+                        house_name VARCHAR(50) NOT NULL,
+                        town VARCHAR(50) NOT NULL,
+                        county VARCHAR(50) NOT NULL,
+                        postcode VARCHAR(10) NOT NULL
+                    );
+                END";
+
+            string createCatTableQuery = @"
+                IF OBJECT_ID('dbo.categories', 'U') IS NULL
+                BEGIN
+                    CREATE TABLE dbo.categories (
+                        cat_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+                        software BIT DEFAULT(0) NOT NULL,
+                        laptop_pcs BIT DEFAULT(0) NOT NULL,
+                        games BIT DEFAULT(0) NOT NULL,
+                        office_tools BIT DEFAULT(0) NOT NULL,
+                        accessories BIT DEFAULT(0) NOT NULL
+                    );
+                END";
+
+            string createClientTableQuery = @"
+                IF OBJECT_ID('dbo.clients', 'U') IS NULL
+                BEGIN
+                    CREATE TABLE dbo.clients (
                         client_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
                         client_name NVARCHAR(100) NOT NULL,
                         address_id INT NOT NULL,
                         phone_number NVARCHAR(15) NOT NULL,
                         email NVARCHAR(100) NOT NULL,
                         cat_id INT NOT NULL,
-                        FOREIGN KEY (address_id) REFERENCES address(address_id),
-                        FOREIGN KEY (cat_id) REFERENCES categories(cat_id)
-                    );
-                END";
-            string createAddressTableQuery = @"
-                IF OBJECT_ID('address', 'U') IS NULL
-                BEGIN
-                    CREATE TABLE address (
-                        address_id INT PRIMARY KEY IDENTITY (1, 1) NOT NULL,
-                        house_name VARCHAR (50) NOT NULL,
-                        town VARCHAR (50) NOT NULL,
-                        county VARCHAR (50) NOT NULL,
-                        postcode VARCHAR (10) NOT NULL,
-                    );
-                END";
-            string createCatTableQuery = @"
-                IF OBJECT_ID('categories', 'U') IS NULL
-                BEGIN
-                    CREATE TABLE categories (
-                        cat_id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
-                        software bit default(0) not null,
-                        laptop_pcs bit default(0) not null,
-                        games bit default(0) not null,
-                        office_tools bit default(0) not null,
-                        accessories bit default(0) not null
+                        FOREIGN KEY (address_id) REFERENCES dbo.address(address_id),
+                        FOREIGN KEY (cat_id) REFERENCES dbo.categories(cat_id)
                     );
                 END";
             using (SqlConnection connection = new SqlConnection(connstring))
@@ -66,15 +69,16 @@ namespace ClientRepository
             using (SqlConnection connection = new SqlConnection(connstring))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(createClientTableQuery, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
+                
                 using (SqlCommand command = new SqlCommand(createAddressTableQuery, connection))
                 {
                     command.ExecuteNonQuery();
                 }
                 using (SqlCommand command = new SqlCommand(createCatTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (SqlCommand command = new SqlCommand(createClientTableQuery, connection))
                 {
                     command.ExecuteNonQuery();
                 }
