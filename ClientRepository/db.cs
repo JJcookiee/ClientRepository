@@ -8,7 +8,7 @@ namespace ClientRepository
 {
     internal class db
     {
-        const string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDictionary|\CRS.mdf;Integrated Security=True";
+        const string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
         public static void remove_client(string ClientId)
         {
             string deleteQuery = "delete * from clients where client_id = @client_id";
