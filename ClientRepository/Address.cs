@@ -28,7 +28,7 @@ namespace ClientRepository
             PostCode = "";
         }
 
-        public static string todb(Address address)//converts address object to string for database storage, database no longer stores it like this
+        public static string totxt(Address address)
         {
             string dbstring = (
                 $"{address.HouseName}, " +
@@ -38,7 +38,7 @@ namespace ClientRepository
                 );
             return dbstring;
         }
-        public static Address fromdb(string dbstring)//converts database string back to address object, database no longer stores it like this
+        public static Address fromtxt(string dbstring)
         {
             string[] dbstrings = dbstring.Split(", ");
             Address address = new Address(

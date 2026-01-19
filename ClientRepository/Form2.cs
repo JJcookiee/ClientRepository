@@ -18,30 +18,25 @@ namespace ClientRepository
     public partial class Form2 : Form
     {
         private DataTable clientDataTable = new DataTable();
+        public bool ordered = true;
         public Form2()
         {
             InitializeComponent();
+            ordered = orderedBox.Checked;
         }
 
-        private void Form2_Load(object sender, EventArgs e)
+        private void Form2_Load(object sender, EventArgs e)//Method to get clients details from the client database and fill the data grid view
         {
-
-
-
-            //Method to get clients details from the client database and fill the data grid view
-
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string selectquery = @"SELECT client_id, client_name, address_id, phone_number, email, cat_id FROM dbo.clients";
-
+            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
             SqlDataReader reader = command.ExecuteReader();
-
-
             clientDataTable.Load(reader);
-
             dataGridViewClientData.DataSource = clientDataTable;
+
+            List<Client> ClientList = db.ClientList(ordered);//lowkey not needed anymore :/
         }
 
 
@@ -78,6 +73,46 @@ namespace ClientRepository
             form1.Show();
             //close form1
             this.Close();
+        }
+
+        private void orderedBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (orderedBox.Checked)
+            {
+                ordered = true;
+                changeChecked();
+            }
+        }
+
+        private void unorderedBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (unorderedBox.Checked)
+            {
+                ordered = false;
+                changeChecked();
+            }
+        }
+
+        private void changeChecked()
+        {
+            if (ordered)
+            {
+                orderedBox.Checked = true;
+                unorderedBox.Checked = false;
+            }
+            else
+            {
+                orderedBox.Checked = false;
+                unorderedBox.Checked = true;
+            }
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            //add code to check admin
+            int client_id = Convert.ToInt16(dataGridViewClientData.SelectedRows[0].Cells["client_id"].Value);
+            db.remove_client(client_id.ToString());
+            dataGridViewClientData.Rows.RemoveAt(dataGridViewClientData.SelectedRows[0].Index);
         }
     }
 }
