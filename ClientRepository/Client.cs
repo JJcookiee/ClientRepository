@@ -52,6 +52,10 @@ namespace ClientRepository
 
             command.ExecuteNonQuery();
         }
+        public static void updateInDB(int client_id)
+        {
+
+        }
     }
 }
 

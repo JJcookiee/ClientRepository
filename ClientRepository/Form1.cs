@@ -9,30 +9,6 @@ namespace ClientRepository
     public partial class Form1 : Form
     {
 
-        public Form1()
-        {
-            InitializeComponent();
-
-        
-
-
-
-        // Ensure categories always has five entries (all unselected by default)
-        categories = new List<Cat>
-            {
-                new Cat(false, Cat.Category.Software),
-                new Cat(false, Cat.Category.Laptop_PCs),
-                new Cat(false, Cat.Category.Games),
-                new Cat(false, Cat.Category.Office_Tools),
-                new Cat(false, Cat.Category.Accessories),
-            };
-
-        }
-
-
-    
-        //make blank variables
-
         string name;
         Address address = new Address();
         Client client = new Client();
@@ -43,12 +19,33 @@ namespace ClientRepository
         string PhoneNumber;
         string Email;
         List<Cat> categories = new List<Cat>();
+        public Form1()
+        {
+            InitializeComponent();
+            // Ensure categories always has five entries (all unselected by default)
+            categories = new List<Cat>
+            {
+                new Cat(false, Cat.Category.Software),
+                new Cat(false, Cat.Category.Laptop_PCs),
+                new Cat(false, Cat.Category.Games),
+                new Cat(false, Cat.Category.Office_Tools),
+                new Cat(false, Cat.Category.Accessories),
+            };
+        }
+
+        public Form1(int client_id, string name, Address address)
+        {
+            InitializeComponent();
+            getName.Text = name;
+
+        }
+    
+        
 
        
 
 
         private void button1_Click(object sender, EventArgs e)
-
         {
             if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(getphone.Text))
             {
@@ -83,7 +80,7 @@ namespace ClientRepository
 
 
 
-
+            //if client_id == null then add new client to database
             //Add details to database
             int cat_id = Cat.addToDB(software, laptop, games, office, accessories);
             int address_id = Address.addToDB(House, Town, County, Postcode);
@@ -168,6 +165,8 @@ namespace ClientRepository
         {
             Form2 form2 = new Form2();
             form2.Show();
+            //close form1
+            this.Close();
         }
     }
 }
