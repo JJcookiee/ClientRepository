@@ -54,7 +54,8 @@ namespace ClientRepository
         }
         public static void updateInDB(int client_id)
         {
-
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+            string updatequery = "UPDATE clients SET client_name = @client_name, phone_number = @phone_number, email = @email WHERE client_id = @client_id";
         }
     }
 }
