@@ -61,7 +61,7 @@ namespace ClientRepository
         private void dataGridViewClientData_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             int selectRow = dataGridViewClientData.Rows.GetFirstRow(DataGridViewElementStates.Selected);
-            int clientId = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
+            int client_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
                 
         }
     }

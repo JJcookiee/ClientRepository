@@ -52,8 +52,10 @@ namespace ClientRepository
 
             command.ExecuteNonQuery();
         }
-        public static void updateInDB(int client_id)
+        public static void updateInDB(int client_id, int address_id, int cat_id, string client_name, string phone_number, string email)
         {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+            string updatequery = "UPDATE clients client_name, address_id, phone_number, email, cat_id) VALUES (@client_name, @address_id, @phone_number, @email, @cat_id)";
 
         }
     }

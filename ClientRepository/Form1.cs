@@ -8,7 +8,7 @@ namespace ClientRepository
 
     public partial class Form1 : Form
     {
-
+        int client_id = 0;
         string name;
         Address address = new Address();
         Client client = new Client();
@@ -33,7 +33,7 @@ namespace ClientRepository
             };
         }
 
-        public Form1(int client_id, string name, Address address)
+        public Form1(int client_id, string name, Address address, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
         {
             InitializeComponent();
             getName.Text = name;
@@ -79,11 +79,26 @@ namespace ClientRepository
             bool accessories = CheckedListBoxCategories.GetItemChecked(4);
 
 
+            int cat_id = 0;
+            int address_id = 0;
 
             //if client_id == null then add new client to database
+            if (client_id == 0)
+            {
+                cat_id = Cat.addToDB(software, laptop, games, office, accessories);
+                address_id = Address.addToDB(House, Town, County, Postcode);
+                Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
+                MessageBox.Show("New client added successfully!", "Success", MessageBoxButtons.OK);
+            }
+            else
+            {
+                //Update existing client in database
+                Client.updateInDB(client.ClientID.Value);
+                MessageBox.Show("Client updated successfully!", "Success", MessageBoxButtons.OK);
+            }
             //Add details to database
-            int cat_id = Cat.addToDB(software, laptop, games, office, accessories);
-            int address_id = Address.addToDB(House, Town, County, Postcode);
+            cat_id = Cat.addToDB(software, laptop, games, office, accessories);
+            address_id = Address.addToDB(House, Town, County, Postcode);
             Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
         }
         public enum category
