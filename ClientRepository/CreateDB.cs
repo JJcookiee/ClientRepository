@@ -7,7 +7,7 @@ namespace ClientRepository
 {
     internal class CreateDB
     {
-        public static void CreateDatabase()// checks for db, creates if not exists, same for tables, probs will only be used once each
+        public static void CreateDatabase()// checks for db, creates if not exists, same for tables
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
             string createDBQuery = @"
@@ -58,7 +58,7 @@ namespace ClientRepository
             using (SqlConnection connection = new SqlConnection(connstring))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(createDBQuery, connection))
+                using (SqlCommand command = new SqlCommand(createDBQuery, connection))//create database if it doesn't exist
                 {
                     command.ExecuteNonQuery();
                 }
@@ -70,15 +70,15 @@ namespace ClientRepository
             {
                 connection.Open();
                 
-                using (SqlCommand command = new SqlCommand(createAddressTableQuery, connection))
+                using (SqlCommand command = new SqlCommand(createAddressTableQuery, connection))//create address table if it doesn't exists
                 {
                     command.ExecuteNonQuery();
                 }
-                using (SqlCommand command = new SqlCommand(createCatTableQuery, connection))
+                using (SqlCommand command = new SqlCommand(createCatTableQuery, connection))//create categories table if it doesn't exist
                 {
                     command.ExecuteNonQuery();
                 }
-                using (SqlCommand command = new SqlCommand(createClientTableQuery, connection))
+                using (SqlCommand command = new SqlCommand(createClientTableQuery, connection))//create clients table if it doesn't exist
                 {
                     command.ExecuteNonQuery();
                 }

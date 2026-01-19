@@ -11,7 +11,7 @@ namespace ClientRepository
 
         public Category cat { get; set; }
 
-        public enum Category
+        public enum Category//which category the object represents
         {
             Software,
             Laptop_PCs,
@@ -20,19 +20,19 @@ namespace ClientRepository
             Accessories
         }
 
-        public Cat(bool selected, Enum category)
+        public Cat(bool selected, Enum category)//initialises category object
         {
             cat = (Category)category;
             Selected = selected;
         }
 
-        public Cat()
+        public Cat()//blank constructor
         {
             cat = new Category();
             Selected = false;
         }
 
-        public static int addToDB(bool software, bool laptop_pcs, bool games, bool office_tools, bool accessories)
+        public static int addToDB(bool software, bool laptop_pcs, bool games, bool office_tools, bool accessories)//adds category to database and returns category id
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
             string insertquery = @"
