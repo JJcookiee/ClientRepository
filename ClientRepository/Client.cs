@@ -16,7 +16,7 @@ namespace ClientRepository
         public string Email { get; set; }
         public List<Cat> Categories { get; set; }
 
-        public Client(int? clientid, string name, Address address, string phonenumber, string email, List<Cat> categories)
+        public Client(int? clientid, string name, Address address, string phonenumber, string email, List<Cat> categories)//initialises client object, sets client id to null if not passed
         {
             if (clientid != null) { ClientID = (int)clientid; }
             Name = name;
@@ -26,7 +26,7 @@ namespace ClientRepository
             Categories = categories;
         }
 
-        public Client()
+        public Client()//blank constructor
         {
             ClientID = 0;
             Name = "";
@@ -36,7 +36,7 @@ namespace ClientRepository
             Categories = new List<Cat>();
         }
 
-        public static void addToDB(int address_id, int cat_id, string client_name, string phone_number, string email)
+        public static void addToDB(int address_id, int cat_id, string client_name, string phone_number, string email)//adds client to database
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
             string insertquery = "INSERT INTO clients (client_name, address_id, phone_number, email, cat_id) VALUES (@client_name, @address_id, @phone_number, @email, @cat_id)";

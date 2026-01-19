@@ -8,7 +8,7 @@ namespace ClientRepository
 {
     internal class db
     {
-        public static void remove_client(string ClientId)
+        public static void remove_client(string ClientId)//removes client from database
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True"; 
             
@@ -21,33 +21,33 @@ namespace ClientRepository
             SqlConnection connection = new(connstring);
 
             connection.Open();
-            using (SqlCommand command = new(selectAddressIdQuery, connection))
+            using (SqlCommand command = new(selectAddressIdQuery, connection))//get clients address id
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
                 int address_id = reader.GetInt32(1);
                 reader.Close();
-                using (SqlCommand addressCommand = new(deleteAddressQuery, connection))
+                using (SqlCommand addressCommand = new(deleteAddressQuery, connection))//delete clients address
                 {
                     addressCommand.Parameters.AddWithValue("@address_id", address_id);
                     addressCommand.ExecuteNonQuery();
                 }
             }
-            using (SqlCommand command = new(selectCatIdQuery, connection))
+            using (SqlCommand command = new(selectCatIdQuery, connection))//get clients cat id
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
                 int cat_id = reader.GetInt32(1);
                 reader.Close();
-                using (SqlCommand addressCommand = new(deleteCatQuery, connection))
+                using (SqlCommand addressCommand = new(deleteCatQuery, connection))//delete clients category list
                 {
                     addressCommand.Parameters.AddWithValue("@cat_id", cat_id);
                     addressCommand.ExecuteNonQuery();
                 }
             }
-            using (SqlCommand command = new(deleteQuery, connection))
+            using (SqlCommand command = new(deleteQuery, connection))//deletes client
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 command.ExecuteNonQuery();
@@ -55,12 +55,12 @@ namespace ClientRepository
             connection.Close();
         }
 
-        public static List<Client> ClientList(bool ordered)
+        public static List<Client> ClientList(bool ordered)//retrieves list of clients from database either ordered or not based on a bool
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
 
             string selectCountQuery = "select count(*) from clients";
-            string selectClientQuery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
+            string selectClientQuery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");//ordered or not
 
             SqlConnection connection = new(connstring);
             SqlDataReader reader;
@@ -69,7 +69,7 @@ namespace ClientRepository
             List<Client> ClientList = new List<Client>();
 
             connection.Open();
-            using (SqlCommand command = new(selectCountQuery, connection))
+            using (SqlCommand command = new(selectCountQuery, connection))//get number of clients
             {
                 reader = command.ExecuteReader();
                 reader.Read();
@@ -77,19 +77,20 @@ namespace ClientRepository
                 reader.Close();
             }
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)//loops thorught all clients
             {
                 Client client = new Client();
-                using (SqlCommand command = new(selectClientQuery, connection))
+                using (SqlCommand command = new(selectClientQuery, connection))//creates client object from database info
                 {
                     reader = command.ExecuteReader();
                     reader.Read();
-                    client.Name = reader.GetString(0);
-                    int address_id = reader.GetInt32(1);
+                    client.ClientID = reader.GetInt32(0);
+                    client.Name = reader.GetString(1);
+                    int address_id = reader.GetInt32(2);
                     client.Address = get_address(address_id);
-                    client.PhoneNumber = reader.GetString(2);
-                    client.Email = reader.GetString(3);
-                    int cat_id = reader.GetInt32(4);
+                    client.PhoneNumber = reader.GetString(3);
+                    client.Email = reader.GetString(4);
+                    int cat_id = reader.GetInt32(5);
                     client.Categories = get_categories(cat_id);
                     reader.Close();
                     ClientList.Add(client);
@@ -99,7 +100,7 @@ namespace ClientRepository
             return ClientList;
         }
 
-        public static Address get_address(int address_id)
+        public static Address get_address(int address_id)//creates address object from database info from address id
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
 
@@ -122,7 +123,7 @@ namespace ClientRepository
             connection.Close();
             return address;
         }
-        public static List<Cat> get_categories(int cat_id)
+        public static List<Cat> get_categories(int cat_id)//creates list of category objects from database info from category id
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
 
@@ -139,7 +140,7 @@ namespace ClientRepository
                 for (int i = 0; i < 5; i++)
                 {
                     Cat cat = new Cat();
-                    switch (i)
+                    switch (i)//sets category enum and selection based on index
                     {
                         case 0:
                             cat.cat = Cat.Category.Software;

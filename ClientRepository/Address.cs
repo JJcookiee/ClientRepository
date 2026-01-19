@@ -12,14 +12,14 @@ namespace ClientRepository
         public string County { get; set; }
         public string PostCode { get; set; }
 
-        public Address(string houseName, string town, string county, string postCode)
+        public Address(string houseName, string town, string county, string postCode)//initialises address object
         {
             HouseName = houseName;
             Town = town;
             County = county;
             PostCode = postCode;
         }
-        public Address()
+        public Address()//blank constructor
         {
             HouseName = "";
             Town = "";
@@ -27,7 +27,7 @@ namespace ClientRepository
             PostCode = "";
         }
 
-        public static string todb(Address address)
+        public static string todb(Address address)//converts address object to string for database storage, database no longer stores it like this
         {
             string dbstring = (
                 $"{address.HouseName}, " +
@@ -37,7 +37,7 @@ namespace ClientRepository
                 );
             return dbstring;
         }
-        public static Address fromdb(string dbstring)
+        public static Address fromdb(string dbstring)//converts database string back to address object, database no longer stores it like this
         {
             string[] dbstrings = dbstring.Split(", ");
             Address address = new Address(
@@ -50,9 +50,9 @@ namespace ClientRepository
         }
 
 
-        public static int addToDB(string house_name, string town, string county, string postcode)
+        public static int addToDB(string house_name, string town, string county, string postcode)//adds address to database and returns address id
         {
-                string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
             string insertquery = @"
                 INSERT INTO address (house_name, town, county, postcode)
                 VALUES (@house_name, @town, @county, @postcode);
