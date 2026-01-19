@@ -93,7 +93,7 @@ namespace ClientRepository
             else
             {
                 //Update existing client in database
-                Client.updateInDB(client.ClientID.Value);
+                Client.updateInDB(client_id, address_id, cat_id, name, PhoneNumber, Email);
                 MessageBox.Show("Client updated successfully!", "Success", MessageBoxButtons.OK);
             }
             //Add details to database
@@ -181,7 +181,7 @@ namespace ClientRepository
             Form2 form2 = new Form2();
             form2.Show();
             //close form1
-            this.Close();
+            
         }
     }
 }

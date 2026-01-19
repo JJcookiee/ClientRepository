@@ -62,7 +62,10 @@ namespace ClientRepository
         {
             int selectRow = dataGridViewClientData.Rows.GetFirstRow(DataGridViewElementStates.Selected);
             int client_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
-                
+            Form1 form1 = new Form1();
+            form1.Show();
+            //close form1
+            this.Close();
         }
     }
 }

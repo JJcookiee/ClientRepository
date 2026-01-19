@@ -54,5 +54,22 @@ namespace ClientRepository
                 return (result == null) ? 0 : Convert.ToInt32(result);
             }
         }
+
+        public static void updateInDB(int client_id, bool software, bool laptop_pcs, bool games, bool office_tools, bool accessories)
+        {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+
+            string updatequery = "UPDATE categories SET software = @software, laptop_pcs = @laptop_pcs, games = @games, office_tools = @office_tools, accessories = @accessories WHERE cat_id = @cat_id";
+            using SqlConnection connection = new(connstring);
+            connection.Open();
+            using (SqlCommand command = new(updatequery, connection))
+            {
+                command.Parameters.AddWithValue("@software", software);
+                command.Parameters.AddWithValue("@laptop_pcs", laptop_pcs);
+                command.Parameters.AddWithValue("@games", games);
+                command.Parameters.AddWithValue("@office_tools", office_tools);
+                command.Parameters.AddWithValue("@accessories", accessories);
+            }
+        }
     }
 }

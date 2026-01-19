@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace ClientRepository
@@ -68,6 +69,19 @@ namespace ClientRepository
 
             object result = command.ExecuteScalar();
             return (result == null) ? 0 : Convert.ToInt32(result);
+        }
+
+        public static void updateInDB(int client_id, string house_name, string town, string county, string postcode)
+        {
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+            string updatequery = "UPDATE address set house_name = @house_name, town = @town, county = @county, postcode = @postcode WHERE address_id = @address_id";
+            using SqlConnection connection = new(connstring);
+            connection.Open();
+            using SqlCommand command = new(updatequery, connection);
+            command.Parameters.AddWithValue("@house_name", house_name);
+            command.Parameters.AddWithValue("@town", town);
+            command.Parameters.AddWithValue("@county", county);
+            command.Parameters.AddWithValue("@postcode", postcode);
         }
     }
 }
