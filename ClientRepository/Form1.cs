@@ -8,22 +8,7 @@ namespace ClientRepository
 
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-
-            // Ensure categories always has five entries (all unselected by default)
-            categories = new List<Cat>
-            {
-                new Cat(false, Cat.Category.Software),
-                new Cat(false, Cat.Category.Laptop_PCs),
-                new Cat(false, Cat.Category.Games),
-                new Cat(false, Cat.Category.Office_Tools),
-                new Cat(false, Cat.Category.Accessories),
-            };
-        }
-        //make blank variables
-
+        int client_id = 0;
         string name;
         Address address = new Address();
         Client client = new Client();
@@ -34,10 +19,46 @@ namespace ClientRepository
         string PhoneNumber;
         string Email;
         List<Cat> categories = new List<Cat>();
-        private void button1_Click(object sender, EventArgs e)
-
+        public Form1()
         {
-            if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(phoneText))
+            InitializeComponent();
+            // Ensure categories always has five entries (all unselected by default)
+            categories = new List<Cat>
+            {
+                new Cat(false, Cat.Category.Software),
+                new Cat(false, Cat.Category.Laptop_PCs),
+                new Cat(false, Cat.Category.Games),
+                new Cat(false, Cat.Category.Office_Tools),
+                new Cat(false, Cat.Category.Accessories),
+            };
+        }
+
+        public Form1(int client_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
+        {
+            InitializeComponent();
+            getName.Text = name;
+            getHouse.Text = House;
+            getTown.Text = Town;
+            getCounty.Text = County;
+            getPostcode.Text = Postcode;
+            getphone.Text = PhoneNumber;
+            getEmail.Text = Email;
+            this.client_id = client_id;
+            CheckedListBoxCategories.SetItemChecked(0, software);
+            CheckedListBoxCategories.SetItemChecked(1, laptop);
+            CheckedListBoxCategories.SetItemChecked(2, games);
+            CheckedListBoxCategories.SetItemChecked(3, office);
+            CheckedListBoxCategories.SetItemChecked(4, accessories);
+        }
+    
+        
+
+       
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(getphone.Text))
             {
 
                 MessageBox.Show("All attributes must be filled in!", "Warning", MessageBoxButtons.OK);
@@ -46,7 +67,7 @@ namespace ClientRepository
 
             string phoneText = getphone.Text.Trim();
 
-        
+
 
             name = getName.Text.Trim();
             House = getHouse.Text.Trim();
@@ -60,7 +81,7 @@ namespace ClientRepository
             address = new Address(House, Town, County, Postcode);
             client = new Client(null, name, address, PhoneNumber, Email, categories);
 
-            
+
             //Category celection check 
             bool software = CheckedListBoxCategories.GetItemChecked(0);
             bool laptop = CheckedListBoxCategories.GetItemChecked(1);
@@ -68,13 +89,25 @@ namespace ClientRepository
             bool office = CheckedListBoxCategories.GetItemChecked(3);
             bool accessories = CheckedListBoxCategories.GetItemChecked(4);
 
-            
 
+            int cat_id = 0;
+            int address_id = 0;
 
-            //Add details to database
-            int cat_id = Cat.addToDB(software, laptop, games, office, accessories);
-            int address_id = Address.addToDB(House, Town, County, Postcode);
-            Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
+            //if client_id == null then add new client to database
+            if (client_id == 0)
+            {
+                cat_id = Cat.addToDB(software, laptop, games, office, accessories);
+                address_id = Address.addToDB(House, Town, County, Postcode);
+                Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
+                MessageBox.Show("New client added successfully!", "Success", MessageBoxButtons.OK);
+            }
+            else
+            {
+                Cat.updateInDB(cat_id, software, laptop, games, office, accessories);
+                Address.updateInDB(address_id, House, Town, County, Postcode);
+                Client.updateInDB(client_id, address_id, cat_id, name, PhoneNumber, Email);
+                MessageBox.Show("Client updated successfully!", "Success", MessageBoxButtons.OK);
+            }
         }
         public enum category
         {
@@ -151,8 +184,14 @@ namespace ClientRepository
             Email = getEmail.Text;
         }
 
-     }
-
- }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
+            //close form1
+            
+        }
+    }
+}
     
 
