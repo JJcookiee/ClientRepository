@@ -14,6 +14,7 @@ namespace ClientRepository
 {
     public partial class Form2 : Form
     {
+        private DataTable clientDataTable = new DataTable();
         public Form2()
         {
             InitializeComponent();
@@ -33,27 +34,19 @@ namespace ClientRepository
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
             SqlDataReader reader = command.ExecuteReader();
-            DataTable dataTable = new DataTable();
+            
 
-            dataTable.Load(reader);
+            clientDataTable.Load(reader);
 
-            dataGridViewClientData.DataSource = dataTable;
+            dataGridViewClientData.DataSource = clientDataTable;
         }
         
 
         //Name search of the data grid view with if statement to show if no results are found
         private void NametextBox_TextChanged(object sender, EventArgs e)
         {
-            if (dataGridViewClientData.DataSource != null)
-            {
-                DataTable dt = dataGridViewClientData.DataSource as DataTable;
-                if (dt != null)
-                {
-                    DataView dvclients = dt.DefaultView;
-                    dvclients.RowFilter = $"client_name LIKE '%{NametextBox.Text}%'";
-                    dataGridViewClientData.DataSource = dvclients.ToTable();
-                }
-            }
+            DataView dataGridViewClientData = clientDataTable.DefaultView;
+            dataGridViewClientData.RowFilter = $"client_name LIKE '%{NametextBox.Text}%'";
 
         }
 
