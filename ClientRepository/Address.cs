@@ -27,7 +27,7 @@ namespace ClientRepository
             PostCode = "";
         }
 
-        public static string todb(Address address)
+        public static string totxt(Address address)
         {
             string dbstring = (
                 $"{address.HouseName}, " +
@@ -37,7 +37,7 @@ namespace ClientRepository
                 );
             return dbstring;
         }
-        public static Address fromdb(string dbstring)
+        public static Address fromtxt(string dbstring)
         {
             string[] dbstrings = dbstring.Split(", ");
             Address address = new Address(
