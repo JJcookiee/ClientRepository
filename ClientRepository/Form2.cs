@@ -28,7 +28,7 @@ namespace ClientRepository
         //Method to get clients details from the client database and fill the data grid view
 
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string selectquery = @"SELECT client_id, client_name, address_id, phone_number, email, Cat_id FROM dbo.clients";
+            string selectquery = @"SELECT client_id, client_name, address_id, phone_number, email, cat_id FROM dbo.clients";
 
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
