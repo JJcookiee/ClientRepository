@@ -33,6 +33,9 @@
             EmailtextBox = new TextBox();
             label1 = new Label();
             label2 = new Label();
+            deleteButton = new Button();
+            orderedBox = new CheckBox();
+            unorderedBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewClientData).BeginInit();
             SuspendLayout();
             // 
@@ -75,17 +78,54 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(280, 2);
+            label2.Location = new Point(275, 8);
             label2.Name = "label2";
             label2.Size = new Size(188, 20);
             label2.TabIndex = 5;
             label2.Text = "Search Client Email below: ";
             // 
+            // deleteButton
+            // 
+            deleteButton.Location = new Point(12, 444);
+            deleteButton.Name = "deleteButton";
+            deleteButton.Size = new Size(182, 29);
+            deleteButton.TabIndex = 6;
+            deleteButton.Text = "Delete selected client";
+            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += deleteButton_Click;
+            // 
+            // orderedBox
+            // 
+            orderedBox.AutoSize = true;
+            orderedBox.Checked = true;
+            orderedBox.CheckState = CheckState.Checked;
+            orderedBox.Location = new Point(560, 12);
+            orderedBox.Name = "orderedBox";
+            orderedBox.Size = new Size(132, 24);
+            orderedBox.TabIndex = 7;
+            orderedBox.Text = "Order client list";
+            orderedBox.UseVisualStyleBackColor = true;
+            orderedBox.CheckedChanged += orderedBox_CheckedChanged;
+            // 
+            // unorderedBox
+            // 
+            unorderedBox.AutoSize = true;
+            unorderedBox.Location = new Point(560, 42);
+            unorderedBox.Name = "unorderedBox";
+            unorderedBox.Size = new Size(165, 24);
+            unorderedBox.TabIndex = 8;
+            unorderedBox.Text = "Unordered client list";
+            unorderedBox.UseVisualStyleBackColor = true;
+            unorderedBox.CheckedChanged += unorderedBox_CheckedChanged;
+            // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 497);
+            Controls.Add(unorderedBox);
+            Controls.Add(orderedBox);
+            Controls.Add(deleteButton);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(EmailtextBox);
@@ -105,5 +145,8 @@
         private TextBox EmailtextBox;
         private Label label1;
         private Label label2;
+        private Button deleteButton;
+        private CheckBox orderedBox;
+        private CheckBox unorderedBox;
     }
 }
