@@ -1,11 +1,14 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 
 
@@ -62,7 +65,16 @@ namespace ClientRepository
         {
             int selectRow = dataGridViewClientData.Rows.GetFirstRow(DataGridViewElementStates.Selected);
             int client_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
-            Form1 form1 = new Form1();
+            string? client_name = dataGridViewClientData.Rows[selectRow].Cells["client_name"].Value.ToString();
+            int address_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["address_id"].Value);
+            string? phone_number = dataGridViewClientData.Rows[selectRow].Cells["phone_number"].Value.ToString();
+            string? email = dataGridViewClientData.Rows[selectRow].Cells["email"].Value.ToString();
+            int cat_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["cat_id"].Value);
+
+            Address address = Address.getFromDB(address_id);
+            List<Cat> categories = Cat.getFromDB(cat_id);
+
+            Form1 form1 = new Form1(client_id, client_name, address.HouseName, address.Town, address.County, address.PostCode, phone_number, email, categories[0].Selected, categories[1].Selected, categories[2].Selected, categories[3].Selected, categories[4].Selected);
             form1.Show();
             //close form1
             this.Close();

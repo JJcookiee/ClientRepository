@@ -33,11 +33,22 @@ namespace ClientRepository
             };
         }
 
-        public Form1(int client_id, string name, Address address, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
+        public Form1(int client_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
         {
             InitializeComponent();
             getName.Text = name;
-
+            getHouse.Text = House;
+            getTown.Text = Town;
+            getCounty.Text = County;
+            getPostcode.Text = Postcode;
+            getphone.Text = PhoneNumber;
+            getEmail.Text = Email;
+            this.client_id = client_id;
+            CheckedListBoxCategories.SetItemChecked(0, software);
+            CheckedListBoxCategories.SetItemChecked(1, laptop);
+            CheckedListBoxCategories.SetItemChecked(2, games);
+            CheckedListBoxCategories.SetItemChecked(3, office);
+            CheckedListBoxCategories.SetItemChecked(4, accessories);
         }
     
         
@@ -92,14 +103,11 @@ namespace ClientRepository
             }
             else
             {
-                //Update existing client in database
+                Cat.updateInDB(cat_id, software, laptop, games, office, accessories);
+                Address.updateInDB(address_id, House, Town, County, Postcode);
                 Client.updateInDB(client_id, address_id, cat_id, name, PhoneNumber, Email);
                 MessageBox.Show("Client updated successfully!", "Success", MessageBoxButtons.OK);
             }
-            //Add details to database
-            cat_id = Cat.addToDB(software, laptop, games, office, accessories);
-            address_id = Address.addToDB(House, Town, County, Postcode);
-            Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
         }
         public enum category
         {
