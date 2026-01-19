@@ -8,7 +8,10 @@ namespace ClientRepository
 
     public partial class Form1 : Form
     {
-        int client_id = 0;
+        private int client_id = 0;
+        private int address_id = 0;
+        private int cat_id = 0;
+
         string name;
         Address address = new Address();
         Client client = new Client();
@@ -22,6 +25,8 @@ namespace ClientRepository
         public Form1()
         {
             InitializeComponent();
+
+            
             // Ensure categories always has five entries (all unselected by default)
             categories = new List<Cat>
             {
@@ -33,7 +38,7 @@ namespace ClientRepository
             };
         }
 
-        public Form1(int client_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
+        public Form1(int client_id, int address_id, int cat_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
         {
             InitializeComponent();
             getName.Text = name;
@@ -43,20 +48,26 @@ namespace ClientRepository
             getPostcode.Text = Postcode;
             getphone.Text = PhoneNumber;
             getEmail.Text = Email;
+
             this.client_id = client_id;
+            this.address_id = address_id;
+            this.cat_id = cat_id;
+
             CheckedListBoxCategories.SetItemChecked(0, software);
             CheckedListBoxCategories.SetItemChecked(1, laptop);
             CheckedListBoxCategories.SetItemChecked(2, games);
             CheckedListBoxCategories.SetItemChecked(3, office);
             CheckedListBoxCategories.SetItemChecked(4, accessories);
         }
-    
-        
 
-       
+      
 
 
-        private void button1_Click(object sender, EventArgs e)
+
+
+
+
+    private void button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(getphone.Text))
             {
@@ -77,9 +88,7 @@ namespace ClientRepository
             Email = getEmail.Text;
             PhoneNumber = phoneText;
 
-            //make new address and client objects
-            address = new Address(House, Town, County, Postcode);
-            client = new Client(null, name, address, PhoneNumber, Email, categories);
+  
 
 
             //Category celection check 
@@ -89,23 +98,29 @@ namespace ClientRepository
             bool office = CheckedListBoxCategories.GetItemChecked(3);
             bool accessories = CheckedListBoxCategories.GetItemChecked(4);
 
+            categories.Clear();
+            categories.Add(new Cat(software, category.Software));
+            categories.Add(new Cat(laptop, category.Laptop_PCs));
+            categories.Add(new Cat(games, category.Games));
+            categories.Add(new Cat(office, category.Office_Tools));
+            categories.Add(new Cat(accessories, category.Accessories));
 
-            int cat_id = 0;
-            int address_id = 0;
+            //make new address and client objects
+            
 
-            //if client_id == null then add new client to database
-            if (client_id == 0)
+                //if client_id == null then add new client to database
+                if (client_id == 0)
             {
-                cat_id = Cat.addToDB(software, laptop, games, office, accessories);
-                address_id = Address.addToDB(House, Town, County, Postcode);
-                Client.addToDB(address_id, cat_id, name, PhoneNumber, Email);
+                this.cat_id = Cat.addToDB(software, laptop, games, office, accessories);
+                this.address_id = Address.addToDB(House, Town, County, Postcode);
+                Client.addToDB(this.address_id, this.cat_id, name, PhoneNumber, Email);
                 MessageBox.Show("New client added successfully!", "Success", MessageBoxButtons.OK);
             }
             else
             {
-                Cat.updateInDB(cat_id, software, laptop, games, office, accessories);
-                Address.updateInDB(address_id, House, Town, County, Postcode);
-                Client.updateInDB(client_id, address_id, cat_id, name, PhoneNumber, Email);
+                Cat.updateInDB(this.cat_id, software, laptop, games, office, accessories);
+                Address.updateInDB(this.address_id, House, Town, County, Postcode);
+                Client.updateInDB(this.client_id, this.address_id, this.cat_id, name, PhoneNumber, Email);
                 MessageBox.Show("Client updated successfully!", "Success", MessageBoxButtons.OK);
             }
         }

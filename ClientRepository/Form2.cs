@@ -74,7 +74,7 @@ namespace ClientRepository
             Address address = Address.getFromDB(address_id);
             List<Cat> categories = Cat.getFromDB(cat_id);
 
-            Form1 form1 = new Form1(client_id, client_name, address.HouseName, address.Town, address.County, address.PostCode, phone_number, email, categories[0].Selected, categories[1].Selected, categories[2].Selected, categories[3].Selected, categories[4].Selected);
+            Form1 form1 = new Form1(client_id, address_id, cat_id, client_name, address.HouseName, address.Town, address.County, address.PostCode, phone_number, email, categories[0].Selected, categories[1].Selected, categories[2].Selected, categories[3].Selected, categories[4].Selected);
             form1.Show();
             //close form1
             this.Close();
