@@ -45,8 +45,8 @@
             label6 = new Label();
             label7 = new Label();
             label8 = new Label();
-            SearchBar = new TextBox();
-            label9 = new Label();
+            button2 = new Button();
+            button3 = new Button();
             SuspendLayout();
             // 
             // button1
@@ -196,29 +196,32 @@
             label8.TabIndex = 17;
             label8.Text = "Select category:";
             // 
-            // SearchBar
+            // button2
             // 
-            SearchBar.Location = new Point(200, 26);
-            SearchBar.Name = "SearchBar";
-            SearchBar.Size = new Size(398, 27);
-            SearchBar.TabIndex = 18;
+            button2.Location = new Point(59, 12);
+            button2.Name = "button2";
+            button2.Size = new Size(248, 47);
+            button2.TabIndex = 18;
+            button2.Text = "Search for client:";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
-            // label9
+            // button3
             // 
-            label9.AutoSize = true;
-            label9.Location = new Point(286, 3);
-            label9.Name = "label9";
-            label9.Size = new Size(224, 20);
-            label9.TabIndex = 19;
-            label9.Text = "Search for Client Name or Email:";
+            button3.Location = new Point(471, 12);
+            button3.Name = "button3";
+            button3.Size = new Size(245, 47);
+            button3.TabIndex = 19;
+            button3.Text = "Edit/ update client details: ";
+            button3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label9);
-            Controls.Add(SearchBar);
+            Controls.Add(button3);
+            Controls.Add(button2);
             Controls.Add(label8);
             Controls.Add(label7);
             Controls.Add(label6);
@@ -261,7 +264,7 @@
         private Label label6;
         private Label label7;
         private Label label8;
-        private TextBox SearchBar;
-        private Label label9;
+        private Button button2;
+        private Button button3;
     }
 }

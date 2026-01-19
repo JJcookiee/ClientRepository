@@ -1,0 +1,107 @@
+﻿namespace ClientRepository
+{
+    partial class Form2
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            dataGridViewClientData = new DataGridView();
+            NametextBox = new TextBox();
+            EmailtextBox = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewClientData).BeginInit();
+            SuspendLayout();
+            // 
+            // dataGridViewClientData
+            // 
+            dataGridViewClientData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewClientData.Location = new Point(12, 80);
+            dataGridViewClientData.Name = "dataGridViewClientData";
+            dataGridViewClientData.RowHeadersWidth = 51;
+            dataGridViewClientData.Size = new Size(776, 358);
+            dataGridViewClientData.TabIndex = 1;
+            // 
+            // NametextBox
+            // 
+            NametextBox.Location = new Point(12, 31);
+            NametextBox.Name = "NametextBox";
+            NametextBox.Size = new Size(248, 27);
+            NametextBox.TabIndex = 2;
+            NametextBox.TextChanged += NametextBox_TextChanged;
+            // 
+            // EmailtextBox
+            // 
+            EmailtextBox.Location = new Point(275, 31);
+            EmailtextBox.Name = "EmailtextBox";
+            EmailtextBox.Size = new Size(253, 27);
+            EmailtextBox.TabIndex = 3;
+            EmailtextBox.TextChanged += EmailtextBox_TextChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 8);
+            label1.Name = "label1";
+            label1.Size = new Size(182, 20);
+            label1.TabIndex = 4;
+            label1.Text = "Search client name below:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(280, 2);
+            label2.Name = "label2";
+            label2.Size = new Size(188, 20);
+            label2.TabIndex = 5;
+            label2.Text = "Search Client Email below: ";
+            // 
+            // Form2
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(EmailtextBox);
+            Controls.Add(NametextBox);
+            Controls.Add(dataGridViewClientData);
+            Name = "Form2";
+            Text = "Form2";
+            Load += Form2_Load;
+            ((System.ComponentModel.ISupportInitialize)dataGridViewClientData).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+        private DataGridView dataGridViewClientData;
+        private TextBox NametextBox;
+        private TextBox EmailtextBox;
+        private Label label1;
+        private Label label2;
+    }
+}

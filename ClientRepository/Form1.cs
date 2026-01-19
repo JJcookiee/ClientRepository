@@ -37,7 +37,7 @@ namespace ClientRepository
         private void button1_Click(object sender, EventArgs e)
 
         {
-            if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(phoneText))
+            if (string.IsNullOrWhiteSpace(getName.Text) || string.IsNullOrWhiteSpace(getHouse.Text) || string.IsNullOrWhiteSpace(getTown.Text) || string.IsNullOrWhiteSpace(getCounty.Text) || string.IsNullOrWhiteSpace(getPostcode.Text) || string.IsNullOrWhiteSpace(getEmail.Text) || string.IsNullOrWhiteSpace(getphone.Text))
             {
 
                 MessageBox.Show("All attributes must be filled in!", "Warning", MessageBoxButtons.OK);
@@ -46,9 +46,9 @@ namespace ClientRepository
 
             string phoneText = getphone.Text.Trim();
 
-        
 
-            name = getName.Text.Trim(); 
+
+            name = getName.Text.Trim();
             House = getHouse.Text.Trim();
             Town = getTown.Text.Trim();
             County = getCounty.Text.Trim();
@@ -60,7 +60,7 @@ namespace ClientRepository
             address = new Address(House, Town, County, Postcode);
             client = new Client(null, name, address, PhoneNumber, Email, categories);
 
-            
+
             //Category celection check 
             bool software = CheckedListBoxCategories.GetItemChecked(0);
             bool laptop = CheckedListBoxCategories.GetItemChecked(1);
@@ -68,7 +68,7 @@ namespace ClientRepository
             bool office = CheckedListBoxCategories.GetItemChecked(3);
             bool accessories = CheckedListBoxCategories.GetItemChecked(4);
 
-            
+
 
 
             //Add details to database
@@ -151,8 +151,12 @@ namespace ClientRepository
             Email = getEmail.Text;
         }
 
-     }
-
- }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
+        }
+    }
+}
     
 
