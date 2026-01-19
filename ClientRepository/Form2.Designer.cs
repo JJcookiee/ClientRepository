@@ -42,8 +42,10 @@
             dataGridViewClientData.Location = new Point(12, 80);
             dataGridViewClientData.Name = "dataGridViewClientData";
             dataGridViewClientData.RowHeadersWidth = 51;
+            dataGridViewClientData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewClientData.Size = new Size(776, 358);
             dataGridViewClientData.TabIndex = 1;
+            dataGridViewClientData.CellDoubleClick += dataGridViewClientData_CellDoubleClick;
             // 
             // NametextBox
             // 

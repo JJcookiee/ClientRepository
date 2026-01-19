@@ -8,12 +8,17 @@ namespace ClientRepository
 
     public partial class Form1 : Form
     {
+
         public Form1()
         {
             InitializeComponent();
 
-            // Ensure categories always has five entries (all unselected by default)
-            categories = new List<Cat>
+        
+
+
+
+        // Ensure categories always has five entries (all unselected by default)
+        categories = new List<Cat>
             {
                 new Cat(false, Cat.Category.Software),
                 new Cat(false, Cat.Category.Laptop_PCs),
@@ -21,7 +26,11 @@ namespace ClientRepository
                 new Cat(false, Cat.Category.Office_Tools),
                 new Cat(false, Cat.Category.Accessories),
             };
+
         }
+
+
+    
         //make blank variables
 
         string name;
@@ -34,6 +43,10 @@ namespace ClientRepository
         string PhoneNumber;
         string Email;
         List<Cat> categories = new List<Cat>();
+
+       
+
+
         private void button1_Click(object sender, EventArgs e)
 
         {

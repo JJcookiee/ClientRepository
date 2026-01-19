@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 
-    
+
 
 namespace ClientRepository
 {
@@ -22,10 +22,10 @@ namespace ClientRepository
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            
-        
 
-        //Method to get clients details from the client database and fill the data grid view
+
+
+            //Method to get clients details from the client database and fill the data grid view
 
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
             string selectquery = @"SELECT client_id, client_name, address_id, phone_number, email, cat_id FROM dbo.clients";
@@ -34,13 +34,13 @@ namespace ClientRepository
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
             SqlDataReader reader = command.ExecuteReader();
-            
+
 
             clientDataTable.Load(reader);
 
             dataGridViewClientData.DataSource = clientDataTable;
         }
-        
+
 
         //Name search of the data grid view with if statement to show if no results are found
         private void NametextBox_TextChanged(object sender, EventArgs e)
@@ -53,16 +53,16 @@ namespace ClientRepository
         //Email search of the data grid view with if statement to show if no results are found
         private void EmailtextBox_TextChanged(object sender, EventArgs e)
         {
-            if (dataGridViewClientData.DataSource != null)
-            {
-                DataTable dt = dataGridViewClientData.DataSource as DataTable;
-                if (dt != null)
-                {
-                    DataView dvclients = dt.DefaultView;
-                    dvclients.RowFilter = $"client_email LIKE '%{EmailtextBox.Text}%'";
-                    dataGridViewClientData.DataSource = dvclients.ToTable();
-                }
-            }
+            DataView dataGridViewClientData = clientDataTable.DefaultView;
+            dataGridViewClientData.RowFilter = $"client_name LIKE '%{EmailtextBox.Text}%'";
+
+        }
+
+        private void dataGridViewClientData_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int selectRow = dataGridViewClientData.Rows.GetFirstRow(DataGridViewElementStates.Selected);
+            int clientId = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
+                
         }
     }
 }
