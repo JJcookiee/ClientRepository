@@ -48,7 +48,6 @@ namespace ClientRepository
             getPostcode.Text = Postcode;
             getphone.Text = PhoneNumber;
             getEmail.Text = Email;
-
             this.client_id = client_id;
             this.address_id = address_id;
             this.cat_id = cat_id;
@@ -91,7 +90,7 @@ namespace ClientRepository
   
 
 
-            //Category celection check 
+            //Category selection check 
             bool software = CheckedListBoxCategories.GetItemChecked(0);
             bool laptop = CheckedListBoxCategories.GetItemChecked(1);
             bool games = CheckedListBoxCategories.GetItemChecked(2);
@@ -105,7 +104,7 @@ namespace ClientRepository
             categories.Add(new Cat(office, category.Office_Tools));
             categories.Add(new Cat(accessories, category.Accessories));
 
-            //make new address and client objects
+            
             
 
                 //if client_id == null then add new client to database
@@ -148,7 +147,7 @@ namespace ClientRepository
             bool Games_Select = CheckedListBoxCategories.GetItemChecked(2);
             category Games_attr_2 = category.Games;
             Cat Games = new Cat(Games_Select, Games_attr_2);
-
+            
             bool Office_Tools_Select = CheckedListBoxCategories.GetItemChecked(3);
             category Office_Tools_attr_2 = category.Office_Tools;
             Cat Office_Tools = new Cat(Office_Tools_Select, Office_Tools_attr_2);

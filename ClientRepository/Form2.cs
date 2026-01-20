@@ -24,16 +24,18 @@ namespace ClientRepository
             InitializeComponent();
             ordered = orderedBox.Checked;
         }
-
-        private void Form2_Load(object sender, EventArgs e)//Method to get clients details from the client database and fill the data grid view
+        //Method to get clients details from the client database and fill the data grid view
+        private void Form2_Load(object sender, EventArgs e)
         {
             LoadClients();
         }
         private void LoadClients()
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+
             string selectquery = @"SELECT c.client_id, c.client_name, c.phone_number, c.email, a.house_name, a.town, a.county, a.postcode, cat.software, cat.laptop_pcs, cat.games, cat.office_tools, cat.accessories FROM clients c INNER JOIN address a ON c.address_id = a.address_id INNER JOIN categories cat ON c.cat_id = cat.cat_id";
             if (ordered) selectquery += " order by client_name asc";
+
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
@@ -41,11 +43,9 @@ namespace ClientRepository
             clientDataTable.Clear();
             clientDataTable.Load(reader);
             dataGridViewClientData.DataSource = clientDataTable;
-
-            List<Client> ClientList = db.ClientList(ordered);//lowkey not needed anymore :/
         }
 
-        //Name search of the data grid view with if statement to show if no results are found
+        //Name search of the data grid view  
         private void NametextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
@@ -53,7 +53,7 @@ namespace ClientRepository
 
         }
 
-        //Email search of the data grid view with if statement to show if no results are found
+        //Email search of the data grid view 
         private void EmailtextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
