@@ -74,7 +74,7 @@ namespace ClientRepository
         public static void updateInDB(int address_id, string house_name, string town, string county, string postcode)
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string updatequery = "UPDATE address set house_name = @house_name, town = @town, county = @county, postcode = @postcode WHERE address_id = @address_id";
+            string updatequery = "UPDATE dbo.address set house_name = @house_name, town = @town, county = @county, postcode = @postcode WHERE address_id = @address_id";
             using SqlConnection connection = new(connstring);
             connection.Open();
             using SqlCommand command = new(updatequery, connection);
