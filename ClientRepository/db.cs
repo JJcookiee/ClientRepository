@@ -10,15 +10,18 @@ namespace ClientRepository
     {
         public static void remove_client(string ClientId)//removes client from database
         {
-            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True"; 
-            
-            string deleteQuery = "delete * from clients where client_id = @client_id";
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+
+            string deleteQuery = "delete from clients where client_id = @client_id";
             string selectAddressIdQuery = "select address_id from clients where client_id = @client_id";
-            string deleteAddressQuery = "delete * from address where address_id = @address_id";
+            string deleteAddressQuery = "delete from address where address_id = @address_id";
             string selectCatIdQuery = "select cat_id from clients where client_id = @client_id";
-            string deleteCatQuery = "delete * from categories where cat_id = @cat_id";
+            string deleteCatQuery = "delete from categories where cat_id = @cat_id";
 
             SqlConnection connection = new(connstring);
+
+            int address_id = 0;
+            int cat_id = 0;
 
             connection.Open();
             using (SqlCommand command = new(selectAddressIdQuery, connection))//get clients address id
@@ -26,41 +29,43 @@ namespace ClientRepository
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
-                int address_id = reader.GetInt32(1);
+                address_id = reader.GetInt32(0);
                 reader.Close();
-                using (SqlCommand addressCommand = new(deleteAddressQuery, connection))//delete clients address
-                {
-                    addressCommand.Parameters.AddWithValue("@address_id", address_id);
-                    addressCommand.ExecuteNonQuery();
-                }
+                
             }
             using (SqlCommand command = new(selectCatIdQuery, connection))//get clients cat id
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
-                int cat_id = reader.GetInt32(1);
+                cat_id = reader.GetInt32(0);
                 reader.Close();
-                using (SqlCommand addressCommand = new(deleteCatQuery, connection))//delete clients category list
-                {
-                    addressCommand.Parameters.AddWithValue("@cat_id", cat_id);
-                    addressCommand.ExecuteNonQuery();
-                }
+                
             }
             using (SqlCommand command = new(deleteQuery, connection))//deletes client
             {
                 command.Parameters.AddWithValue("@client_id", ClientId);
                 command.ExecuteNonQuery();
             }
+            using (SqlCommand addressCommand = new(deleteAddressQuery, connection))//delete clients address
+            {
+                addressCommand.Parameters.AddWithValue("@address_id", address_id);
+                addressCommand.ExecuteNonQuery();
+            }
+            using (SqlCommand addressCommand = new(deleteCatQuery, connection))//delete clients category list
+            {
+                addressCommand.Parameters.AddWithValue("@cat_id", cat_id);
+                addressCommand.ExecuteNonQuery();
+            }
             connection.Close();
         }
 
         public static List<Client> ClientList(bool ordered)//retrieves list of clients from database either ordered or not based on a bool
         {
-            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
 
             string selectCountQuery = "select count(*) from clients";
-            string selectClientQuery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");//ordered or not
+            string selectClientQuery = "select client_id, client_name, address_id, phone_number, email, cat_id from clients" + (ordered ? " order by client_name asc" : "");//ordered or not
 
             SqlConnection connection = new(connstring);
             SqlDataReader reader;
@@ -102,9 +107,9 @@ namespace ClientRepository
 
         public static Address get_address(int address_id)//creates address object from database info from address id
         {
-            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
 
-            string selectAddressQuery = "select house_name, town, county, post_code from address where address_id = @address_id";
+            string selectAddressQuery = "select house_name, town, county, postcode from address where address_id = @address_id";
             SqlConnection connection = new(connstring);
             SqlDataReader reader;
             Address address = new Address();
@@ -125,7 +130,7 @@ namespace ClientRepository
         }
         public static List<Cat> get_categories(int cat_id)//creates list of category objects from database info from category id
         {
-            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+            string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
 
             string selectCatQuery = "select software, laptop_pcs, games, office_tools, accessories from categories where cat_id = @cat_id";
             SqlConnection connection = new(connstring);
