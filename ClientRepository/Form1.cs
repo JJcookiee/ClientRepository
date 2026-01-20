@@ -172,7 +172,7 @@ namespace ClientRepository
 
             name = getName.Text;
         }
-
+        
         private void getHouse_TextChanged(object sender, EventArgs e)
         {
             House = getHouse.Text;
