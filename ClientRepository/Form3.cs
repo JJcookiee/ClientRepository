@@ -38,6 +38,7 @@ namespace ClientRepository
         private Dictionary<string, string> clients = new Dictionary<string, string>();
         private Dictionary<string, string> admins = new Dictionary<string, string>();
         private Dictionary<string, string> Staff = new Dictionary<string, string>();
+        private IEnumerable<IPasswordRule> rules;
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
@@ -99,7 +100,23 @@ namespace ClientRepository
                 }));
             }
         }
+        private void TxtPassword_TextChanged(object sender, EventArgs e)
+        {
+            string password = TxtPassword.Text;
+            bool allPassed = true;
 
+            // Fix: Cast rule to a known interface or delegate type that defines Rule method.
+            // Assuming rules is a collection of objects implementing IPasswordRule with a bool Rule(string) method.
+            foreach (var ruleObj in rules)
+            {
+                if (ruleObj is IPasswordRule rule)
+                {
+                    if (!rule.Rule(password))
+                        allPassed = false;
+                }
+                // Optionally handle else: ignore or log invalid rule objects
+            }
+        }
         private void BtnReg2_Click_1(object sender, EventArgs e)
         {
             // Diagnostic to confirm the click handler is being invoked
@@ -120,5 +137,12 @@ namespace ClientRepository
                 this.Show();
             }
         }
+    }
+
+    // Add this interface definition if not already present in your project.
+    // Place it in a suitable file (e.g., IPasswordRule.cs) and namespace.
+    public interface IPasswordRule
+    {
+        bool Rule(string password);
     }
 }

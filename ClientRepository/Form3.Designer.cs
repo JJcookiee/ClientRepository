@@ -1,5 +1,4 @@
-﻿
-namespace ClientRepository
+﻿namespace ClientRepository
 {
     partial class Form3
     {
@@ -178,7 +177,40 @@ namespace ClientRepository
 
         private void TxtPassword_TextChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            string password = TxtPassword.Text;
+            bool allPassed = true;
+
+            for (int i = 0; i <= 4; i++)
+            {
+                Label ruleLabel = i switch
+                {
+                    0 => LblRule0,
+                    1 => LblRule1,
+                    2 => LblRule2,
+                    3 => LblRule3,
+                    4 => LblRule4,
+                    _ => null
+                };
+                if (ruleLabel == null) continue;
+                bool rulePassed = i switch
+                {
+                    0 => password.Length >= 8,
+                    1 => System.Text.RegularExpressions.Regex.IsMatch(password, "[A-Z]"),
+                    2 => System.Text.RegularExpressions.Regex.IsMatch(password, "[a-z]"),
+                    3 => System.Text.RegularExpressions.Regex.IsMatch(password, "[0-9]"),
+                    4 => System.Text.RegularExpressions.Regex.IsMatch(password, "[^a-zA-Z0-9]"),
+                    _ => false
+                };
+                if (rulePassed)
+                {
+                    ruleLabel.Text = "✔ " + ruleLabel.Text.TrimStart('✔', '✘', ' ');
+                }
+                else
+                {
+                    ruleLabel.Text = "✘ " + ruleLabel.Text.TrimStart('✔', '✘', ' ');
+                    allPassed = false;
+                }
+            }
         }
 
         private void btnReg_Click(object sender, EventArgs e)
