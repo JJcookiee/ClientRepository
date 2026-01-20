@@ -38,7 +38,7 @@ namespace ClientRepository
             };
         }
 
-        public Form1(int client_id, int address_id, int cat_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
+        public Form1(int client_id, string name, string House, string Town, string County, string Postcode, string PhoneNumber, string Email, bool software, bool laptop, bool games, bool office, bool accessories)
         {
             InitializeComponent();
             getName.Text = name;
