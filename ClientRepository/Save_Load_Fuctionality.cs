@@ -20,7 +20,7 @@ namespace ClientRepository
             Encoding.UTF8.GetBytes("1234567890123456");  //strings to 16 bytes
 
         private static readonly byte[] IV =
-            Encoding.UTF8.GetBytes("6543210987654321");  //strings to 16bytes
+            Encoding.UTF8.GetBytes("6543210987654321");  //strings to 16 bytes
 
         public static void Save(string filePath, string data, FileFormat format)
         {

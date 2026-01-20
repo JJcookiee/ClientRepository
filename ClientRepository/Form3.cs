@@ -6,154 +6,119 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClientRepository
 {
-    public partial class Form3 : Form
+    public partial class Form4 : Form
     {
+        public Form4()
+        {
+            InitializeComponent();
+
+            // Defensive wiring: attach handlers to the runtime controls (designer names must match)
+            // This avoids silent failures if the designer didn't wire events or names differ.
+            if (BtnReg2 != null)
+            {
+                BtnReg2.Click -= BtnReg2_Click_1;
+                BtnReg2.Click += BtnReg2_Click_1;
+            }
+
+            if (BtnLogin != null)
+            {
+                BtnLogin.Click -= BtnLogin_Click;
+                BtnLogin.Click += BtnLogin_Click;
+            }
+
+            // Ensure Load handler will populate the staff dictionary for login
+            this.Load -= Form4_Load;
+            this.Load += Form4_Load;
+        }
+
         private Dictionary<string, string> clients = new Dictionary<string, string>();
         private Dictionary<string, string> admins = new Dictionary<string, string>();
         private Dictionary<string, string> Staff = new Dictionary<string, string>();
-        public Form3()
+
+        private void BtnLogin_Click(object sender, EventArgs e)
         {
-            InitializeComponent();
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";  //gets staff from db and puts in dictionary
-            string selectStaffQuery = "SELECT username, password FROM Staff";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(selectStaffQuery, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string username = reader.GetString(0);
-                            string password = reader.GetString(1);
-                            Staff[username] = password;
-                        }
-                    }
-                }
-                connection.Close();
-            }
-        }
-        
-        private void btnReg_Click(object sender, EventArgs e)
-        {
-            string username = TxtUsername.Text;
-            string password = TxtPassword.Text;
-            string confirmPassword = TxtConPass.Text;
+            string username = TxtUsername?.Text ?? string.Empty;
+            string password = TxtPassword?.Text ?? string.Empty;
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(confirmPassword))
+            if (AuthenticateStaff(username, password))
             {
-                MessageBox.Show("Username and password cannot be empty.");
-                return;
-            }
-
-            if (password != confirmPassword)
-            {
-                MessageBox.Show("Passwords do not match.");
-                return;
-            }
-
-            if (IsUsernameTaken(username))
-            {
-                MessageBox.Show("Username is already taken.");
-                return;
-            }
-
-            if(!IsStrongPassword(password))
-            {
-                MessageBox.Show("Password does not meet the required criteria.");
-                return;
-            }
-
-            if (SaveStaffCredentials(username, password))
-            {
-                MessageBox.Show("Registration successful!");
+                MessageBox.Show("Login successful!");
             }
             else
             {
-                MessageBox.Show("Registration failed. Please try again.");
+                MessageBox.Show("Invalid username or password.");
             }
         }
 
-        private bool IsUsernameTaken(string username)
+        private bool AuthenticateStaff(string username, string password)
         {
-            return clients.ContainsKey(username) || admins.ContainsKey(username) || Staff.ContainsKey(username);
+            return Staff.ContainsKey(username) && Staff[username] == password;
         }
 
-        private bool SaveStaffCredentials(string username, string password)
+        private async void Form4_Load(object? sender, EventArgs e)
         {
-            if (!Staff.ContainsKey(username))
-            {
-                Staff.Add(username, password);
-                return true;
-            }
-            return false;
+            // Load staff credentials async so UI stays responsive and login can work
+            await LoadStaffCredentialsAsync();
         }
 
-        private void TxtPassword_TextChanged(object sender, EventArgs e)
+        private async Task LoadStaffCredentialsAsync()
         {
-            string password = TxtPassword.Text;
-            bool allPassed = true;
-
-            for (int i = 0; i < rules.Length; i++)
+            try
             {
-
-                if (rules[i].Rule(password))
+                await Task.Run(() =>
                 {
-                    MarkRuleAsPassed(i);
-                }
-                else
+                    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
+                    string selectStaffQuery = "SELECT username, password FROM dbo.staff";
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand command = new SqlCommand(selectStaffQuery, connection))
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string username = reader.GetString(0);
+                                string password = reader.GetString(1);
+                                this.Invoke((Action)(() => Staff[username] = password));
+                            }
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                // Do not block UI — surface the problem and allow the app to continue
+                this.Invoke((Action)(() =>
                 {
-                    MarkRuleAsFailed(i);
-                    allPassed = false;
-                }
-            }
-            btnReg.Enabled = allPassed && TxtPassword.Text == TxtConPass.Text;
-        }
-
-        private (Func<string, bool> Rule, string Message)[] rules = new (Func<string, bool> Rule, string Message)[]
-        {
-            (pwd => pwd.Length >= 8, "At least 8 characters"),
-            (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[A-Z]"), "At least one uppercase letter"),
-            (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[a-z]"), "At least one lowercase letter"),
-            (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[0-9]"), "At least one digit"),
-            (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[\W_]"), "At least one special character")
-        };
-
-        private void MarkRuleAsPassed(int index)
-        {
-            Label lbl = this.Controls.Find("LblRule" + index, true).FirstOrDefault() as Label;
-            if (lbl != null)
-            {
-                lbl.Text = "✔ " + rules[index].Message;
-                lbl.ForeColor = Color.Green;
+                    MessageBox.Show("Could not load staff credentials: " + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }));
             }
         }
 
-        private void MarkRuleAsFailed(int index)
+        private void BtnReg2_Click_1(object sender, EventArgs e)
         {
-            Label lbl = this.Controls.Find("LblRule" + index, true).FirstOrDefault() as Label;
-            if (lbl != null)
+            // Diagnostic to confirm the click handler is being invoked
+            MessageBox.Show("Register clicked (handler entered).", "Diagnostic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            try
             {
-                lbl.Text = "✘ " + rules[index].Message;
-                lbl.ForeColor = Color.Red;
+                // Construct Form3 and show it. Form3's DB work now runs in its Load handler asynchronously.
+                var form3 = new Form3(this);
+                form3.FormClosed += (s, args) => this.Show();
+                this.Hide();
+                form3.Show();
             }
-        }
-        private bool IsStrongPassword(string password)
-        {
-            foreach (var rule in rules)
+            catch (Exception ex)
             {
-                if (!rule.Rule(password))
-                {
-                    return false;
-                }
+                // Surface any constructor exception (should be rare now that DB work is deferred)
+                MessageBox.Show("Failed to open registration form:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Show();
             }
-            return true;
         }
     }
 }

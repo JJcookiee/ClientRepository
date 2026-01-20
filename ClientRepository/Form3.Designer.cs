@@ -1,4 +1,5 @@
-﻿namespace ClientRepository
+﻿
+namespace ClientRepository
 {
     partial class Form3
     {
@@ -40,6 +41,7 @@
             LblRule1 = new Label();
             LblRule2 = new Label();
             LblRule3 = new Label();
+            LblRule4 = new Label();
             SuspendLayout();
             // 
             // LblRegistration
@@ -142,11 +144,20 @@
             LblRule3.Size = new Size(0, 25);
             LblRule3.TabIndex = 11;
             // 
+            // LblRule4
+            // 
+            LblRule4.AutoSize = true;
+            LblRule4.Location = new Point(408, 252);
+            LblRule4.Name = "LblRule4";
+            LblRule4.Size = new Size(0, 25);
+            LblRule4.TabIndex = 12;
+            // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(LblRule4);
             Controls.Add(LblRule3);
             Controls.Add(LblRule2);
             Controls.Add(LblRule1);
@@ -165,6 +176,16 @@
             PerformLayout();
         }
 
+        private void TxtPassword_TextChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnReg_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private Label LblRegistration;
@@ -179,5 +200,6 @@
         private Label LblRule1;
         private Label LblRule2;
         private Label LblRule3;
+        private Label LblRule4;
     }
 }
