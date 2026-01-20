@@ -1,4 +1,5 @@
-﻿namespace ClientRepository
+﻿
+namespace ClientRepository
 {
     partial class Form3
     {
@@ -173,6 +174,16 @@
             Text = "Form3";
             ResumeLayout(false);
             PerformLayout();
+        }
+
+        private void TxtPassword_TextChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnReg_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

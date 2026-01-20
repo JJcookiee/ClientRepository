@@ -1,4 +1,6 @@
-﻿namespace ClientRepository
+﻿
+
+namespace ClientRepository
 {
     partial class Form4
     {
@@ -34,6 +36,8 @@
             LblPassword = new Label();
             TxtPassword = new TextBox();
             BtnLogin = new Button();
+            LblNoLogin = new Label();
+            BtnReg2 = new Button();
             SuspendLayout();
             // 
             // LblLogin
@@ -79,7 +83,7 @@
             // 
             // BtnLogin
             // 
-            BtnLogin.Location = new Point(61, 357);
+            BtnLogin.Location = new Point(648, 363);
             BtnLogin.Name = "BtnLogin";
             BtnLogin.Size = new Size(112, 34);
             BtnLogin.TabIndex = 5;
@@ -87,11 +91,32 @@
             BtnLogin.UseVisualStyleBackColor = true;
             BtnLogin.Click += BtnLogin_Click;
             // 
+            // LblNoLogin
+            // 
+            LblNoLogin.AutoSize = true;
+            LblNoLogin.Location = new Point(61, 324);
+            LblNoLogin.Name = "LblNoLogin";
+            LblNoLogin.Size = new Size(200, 25);
+            LblNoLogin.TabIndex = 6;
+            LblNoLogin.Text = "No login? Register here:";
+            // 
+            // BtnReg2
+            // 
+            BtnReg2.Location = new Point(64, 363);
+            BtnReg2.Name = "BtnReg2";
+            BtnReg2.Size = new Size(112, 34);
+            BtnReg2.TabIndex = 7;
+            BtnReg2.Text = "Register";
+            BtnReg2.UseVisualStyleBackColor = true;
+            BtnReg2.Click += BtnReg2_Click_1;
+            // 
             // Form4
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(BtnReg2);
+            Controls.Add(LblNoLogin);
             Controls.Add(BtnLogin);
             Controls.Add(TxtPassword);
             Controls.Add(LblPassword);
@@ -100,9 +125,11 @@
             Controls.Add(LblLogin);
             Name = "Form4";
             Text = "Form4";
+            Load += Form4_Load;
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
@@ -112,5 +139,7 @@
         private Label LblPassword;
         private TextBox TxtPassword;
         private Button BtnLogin;
+        private Label LblNoLogin;
+        private Button BtnReg2;
     }
 }
