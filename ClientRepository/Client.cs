@@ -55,15 +55,13 @@ namespace ClientRepository
         public static void updateInDB(int client_id, int address_id, int cat_id, string client_name, string phone_number, string email)
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string updatequery = "UPDATE dbo.clients SET client_name = @client_name, address_id = @address_id, phone_number = @phone_number, email = @email, cat_id = @cat_id WHERE client_id = @client_id";
+            string updatequery = "UPDATE dbo.clients SET client_name = @client_name, phone_number = @phone_number, email = @email WHERE client_id = @client_id";
 
             using SqlConnection connection = new(connstring);
             connection.Open();
             using SqlCommand command = new(updatequery, connection);
             command.Parameters.AddWithValue("@client_id", client_id);
             command.Parameters.AddWithValue("@client_name", client_name);
-            command.Parameters.AddWithValue("@address_id", address_id);
-            command.Parameters.AddWithValue("@cat_id", cat_id);
             command.Parameters.Add("@phone_number", System.Data.SqlDbType.VarChar, 20).Value = phone_number;
             command.Parameters.AddWithValue("@email", email);
 
