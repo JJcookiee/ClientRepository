@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Data.SqlClient;
+using System.Windows.Forms;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ClientRepository
 {
@@ -55,6 +58,20 @@ namespace ClientRepository
                         FOREIGN KEY (cat_id) REFERENCES dbo.categories(cat_id)
                     );
                 END";
+            string createStaffTableQuery = @"
+                IF OBJECT_ID('dbo.staff', 'U') IS NULL
+                BEGIN
+                    CREATE TABLE dbo.staff (
+                        username NVARCHAR(50) NOT NULL,
+                        password NVARCHAR(256) NOT NULL,
+                        CONSTRAINT unique_username UNIQUE (username)
+                    );
+                END";
+            string insertAdminQuery = @"INSERT INTO dbo.staff(username, password)
+                SELECT 'admin', 'admin'
+                WHERE NOT EXISTS(
+                    SELECT 1 FROM dbo.staff WHERE username = 'admin'
+                )";
             using (SqlConnection connection = new SqlConnection(connstring))
             {
                 connection.Open();
@@ -79,6 +96,14 @@ namespace ClientRepository
                     command.ExecuteNonQuery();
                 }
                 using (SqlCommand command = new SqlCommand(createClientTableQuery, connection))//create clients table if it doesn't exist
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (SqlCommand command = new SqlCommand(createStaffTableQuery, connection))//create staff table if it doesn't exist
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (SqlCommand command = new SqlCommand(insertAdminQuery, connection))//insert default admin user if not exists
                 {
                     command.ExecuteNonQuery();
                 }

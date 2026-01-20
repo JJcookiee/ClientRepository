@@ -30,17 +30,17 @@ namespace ClientRepository
 
         public static string totxt(Address address)
         {
-            string dbstring = (
+            string txtstring = (
                 $"{address.HouseName}, " +
                 $"{address.Town}, " +
                 $"{address.County}, " +
                 $"{address.PostCode}"
                 );
-            return dbstring;
+            return txtstring;
         }
-        public static Address fromtxt(string dbstring)
+        public static Address fromtxt(string txtstring)
         {
-            string[] dbstrings = dbstring.Split(", ");
+            string[] dbstrings = txtstring.Split(", ");
             Address address = new Address(
                 houseName: dbstrings[0],
                 town: dbstrings[1],

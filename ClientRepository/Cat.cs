@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace ClientRepository
@@ -18,6 +19,30 @@ namespace ClientRepository
             Games,
             Office_Tools,
             Accessories
+        }
+
+        public static Category toCategory(string s)
+        {
+            Category cat = new Category();
+            switch (s) 
+            {
+                case ("software"):
+                    cat = Category.Software;
+                    break;
+                case ("Laptop_PCs"):
+                    cat = Category.Laptop_PCs;
+                    break;
+                case ("Games"):
+                    cat = Category.Games;
+                    break;
+                case ("Office_Tools"):
+                    cat = Category.Office_Tools;
+                    break;
+                case ("Accessories"):
+                    cat = Category.Accessories;
+                    break;
+            }
+            return cat;
         }
 
         public Cat(bool selected, Enum category)//initialises category object
@@ -99,6 +124,32 @@ namespace ClientRepository
                     return null;
                 }
             }
+        }
+
+        public static string totxt(List<Cat> categories)
+        {
+            string txtstring = "";
+            foreach (Cat cat in categories)
+            {
+                txtstring += $"{cat.cat}:{(cat.Selected).ToString()}";
+                txtstring += ", ";
+            }
+            txtstring = txtstring.Remove(-2,2);
+            return txtstring;
+        }
+        public static List<Cat> fromtxt(string txtstring)
+        {
+            string[] txtstrings = txtstring.Split(", ");
+            List<Cat> categories = new List<Cat>();
+            foreach (string s in txtstrings)
+            {
+                string[] split = s.Split(":");
+                Cat Cat = new Cat(
+                    selected: bool.Parse(split[1]),
+                    category: toCategory(split[0])
+                    );
+            }
+            return categories;
         }
     }
 }
