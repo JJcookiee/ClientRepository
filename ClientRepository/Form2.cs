@@ -24,23 +24,22 @@ namespace ClientRepository
             InitializeComponent();
             ordered = orderedBox.Checked;
         }
-
-        private void Form2_Load(object sender, EventArgs e)//Method to get clients details from the client database and fill the data grid view
+        //Method to get clients details from the client database and fill the data grid view
+        private void Form2_Load(object sender, EventArgs e)
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
+            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" 
+                + (ordered ? " order by client_name asc" : "");
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
             SqlDataReader reader = command.ExecuteReader();
             clientDataTable.Load(reader);
             dataGridViewClientData.DataSource = clientDataTable;
-
-            List<Client> ClientList = db.ClientList(ordered);//lowkey not needed anymore :/
         }
 
 
-        //Name search of the data grid view with if statement to show if no results are found
+        //Name search of the data grid view  
         private void NametextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
@@ -48,7 +47,7 @@ namespace ClientRepository
 
         }
 
-        //Email search of the data grid view with if statement to show if no results are found
+        //Email search of the data grid view 
         private void EmailtextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
