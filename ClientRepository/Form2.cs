@@ -27,19 +27,23 @@ namespace ClientRepository
         //Method to get clients details from the client database and fill the data grid view
         private void Form2_Load(object sender, EventArgs e)
         {
+            LoadClients();
+        }
+        private void LoadClients()
+        {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" 
-                + (ordered ? " order by client_name asc" : "");
+            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
             SqlDataReader reader = command.ExecuteReader();
+            clientDataTable.Clear();
             clientDataTable.Load(reader);
             dataGridViewClientData.DataSource = clientDataTable;
         }
 
 
-        //Name search of the data grid view  
+        //Name search of the data grid view with if statement to show if no results are found
         private void NametextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
@@ -59,16 +63,25 @@ namespace ClientRepository
         {
             int selectRow = dataGridViewClientData.Rows.GetFirstRow(DataGridViewElementStates.Selected);
             int client_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["client_id"].Value);
-            string? client_name = dataGridViewClientData.Rows[selectRow].Cells["client_name"].Value.ToString();
-            int address_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["address_id"].Value);
-            string? phone_number = dataGridViewClientData.Rows[selectRow].Cells["phone_number"].Value.ToString();
-            string? email = dataGridViewClientData.Rows[selectRow].Cells["email"].Value.ToString();
-            int cat_id = Convert.ToInt16(dataGridViewClientData.Rows[selectRow].Cells["cat_id"].Value);
+            string client_name = dataGridViewClientData.Rows[selectRow].Cells["client_name"].Value.ToString();
+            string house = dataGridViewClientData.Rows[selectRow].Cells["house_name"].Value.ToString();
+            string town = dataGridViewClientData.Rows[selectRow].Cells["town"].Value.ToString();
+            string county = dataGridViewClientData.Rows[selectRow].Cells["county"].Value.ToString();
+            string postcode = dataGridViewClientData.Rows[selectRow].Cells["postcode"].Value.ToString();
+            string phone_number = dataGridViewClientData.Rows[selectRow].Cells["phone_number"].Value.ToString();
+            string email = dataGridViewClientData.Rows[selectRow].Cells["email"].Value.ToString();
+            bool[] cats = [
+                bool.Parse(dataGridViewClientData.Rows[selectRow].Cells["software"].Value.ToString()),
+                bool.Parse(dataGridViewClientData.Rows[selectRow].Cells["laptop_pcs"].Value.ToString()),
+                bool.Parse(dataGridViewClientData.Rows[selectRow].Cells["games"].Value.ToString()),
+                bool.Parse(dataGridViewClientData.Rows[selectRow].Cells["office_tools"].Value.ToString()),
+                bool.Parse(dataGridViewClientData.Rows[selectRow].Cells["accessories"].Value.ToString())
+                ];
 
-            Address address = Address.getFromDB(address_id);
-            List<Cat> categories = Cat.getFromDB(cat_id);
+            //Address address = Address.getFromDB(address_id);
+            //List<Cat> categories = Cat.getFromDB(cat_id);
 
-            Form1 form1 = new Form1(client_id, address_id, cat_id, client_name, address.HouseName, address.Town, address.County, address.PostCode, phone_number, email, categories[0].Selected, categories[1].Selected, categories[2].Selected, categories[3].Selected, categories[4].Selected);
+            Form1 form1 = new Form1(client_id, client_name, house, town, county, postcode, phone_number, email, cats[0], cats[1], cats[2], cats[3], cats[4]);
             form1.Show();
             //close form1
             this.Close();
@@ -80,6 +93,7 @@ namespace ClientRepository
             {
                 ordered = true;
                 changeChecked();
+                LoadClients();
             }
         }
 
@@ -89,6 +103,7 @@ namespace ClientRepository
             {
                 ordered = false;
                 changeChecked();
+                LoadClients();
             }
         }
 
@@ -109,8 +124,9 @@ namespace ClientRepository
         private void deleteButton_Click(object sender, EventArgs e)
         {
             //add code to check admin
-            int client_id = Convert.ToInt16(dataGridViewClientData.SelectedRows[0].Cells["client_id"].Value);
-            db.remove_client(client_id.ToString());
+            int? client_id = Convert.ToInt16(dataGridViewClientData.SelectedRows[0].Cells["client_id"].Value);
+            if (client_id == null || client_id == 0) { return; }
+            else { db.remove_client(client_id.ToString()); }
             dataGridViewClientData.Rows.RemoveAt(dataGridViewClientData.SelectedRows[0].Index);
         }
     }

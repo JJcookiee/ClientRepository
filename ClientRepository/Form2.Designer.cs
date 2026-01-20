@@ -46,7 +46,7 @@
             dataGridViewClientData.Name = "dataGridViewClientData";
             dataGridViewClientData.RowHeadersWidth = 51;
             dataGridViewClientData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewClientData.Size = new Size(776, 358);
+            dataGridViewClientData.Size = new Size(1002, 358);
             dataGridViewClientData.TabIndex = 1;
             dataGridViewClientData.CellDoubleClick += dataGridViewClientData_CellDoubleClick;
             // 
@@ -122,7 +122,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 497);
+            ClientSize = new Size(1026, 497);
             Controls.Add(unorderedBox);
             Controls.Add(orderedBox);
             Controls.Add(deleteButton);
