@@ -76,6 +76,7 @@ namespace ClientRepository
                 // Do not throw from constructor — surface to user and allow registration UI to open
                 this.Invoke((Action)(() =>
                 {
+
                 }));
             }
         }
