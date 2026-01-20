@@ -124,25 +124,6 @@ namespace ClientRepository
             (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[0-9]"), "At least one digit"),
             (pwd => System.Text.RegularExpressions.Regex.IsMatch(pwd, @"[\W_]"), "At least one special character")
         };
-        private void TxtPassword_TextChanged(object sender, EventArgs e)
-        {
-            string password = TxtPassword.Text;
-            bool allPassed = true;
-
-            for (int i = 0; i < rules.Length; i++)
-            {
-
-                if (rules[i].Rule(password))
-                {
-                    MarkRuleAsPassed(i);
-                }
-                else
-                {
-                    MarkRuleAsFailed(i);
-                    allPassed = false;
-                }
-            }
-            btnReg.Enabled = allPassed && TxtPassword.Text == TxtConPass.Text;
         private void MarkRuleAsPassed(int index)
         {
             Label lbl = this.Controls.Find("LblRule" + index, true).FirstOrDefault() as Label;
