@@ -32,7 +32,10 @@ namespace ClientRepository
         private void LoadClients()
         {
             string connstring = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";
-            string selectquery = "select client_id, client_name, address_id, phone_number, email from clients" + (ordered ? " order by client_name asc" : "");
+
+            string selectquery = @"SELECT c.client_id, c.client_name, c.phone_number, c.email, a.house_name, a.town, a.county, a.postcode, cat.software, cat.laptop_pcs, cat.games, cat.office_tools, cat.accessories FROM clients c INNER JOIN address a ON c.address_id = a.address_id INNER JOIN categories cat ON c.cat_id = cat.cat_id";
+            if (ordered) selectquery += " order by client_name asc";
+
             SqlConnection connection = new SqlConnection(connstring);
             connection.Open();
             SqlCommand command = new SqlCommand(selectquery, connection);
@@ -42,8 +45,7 @@ namespace ClientRepository
             dataGridViewClientData.DataSource = clientDataTable;
         }
 
-
-        //Name search of the data grid view with if statement to show if no results are found
+        //Name search of the data grid view  
         private void NametextBox_TextChanged(object sender, EventArgs e)
         {
             DataView dataGridViewClientData = clientDataTable.DefaultView;
