@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClientRepository
 {
@@ -19,24 +20,37 @@ namespace ClientRepository
         public Form3()
         {
             InitializeComponent();
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";  //gets staff from db and puts in dictionary
-            string selectStaffQuery = "SELECT username, password FROM Staff";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            // keep register disabled until checks pass
+            btnReg.Enabled = false;
+            // ensure confirm password changes also re-evaluate rules/enable state
+            TxtConPass.TextChanged += TxtPassword_TextChanged;
+
+            try
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(selectStaffQuery, connection))
+                string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=CRS;Integrated Security=True";  //gets staff from db and puts in dictionary
+                string selectStaffQuery = "SELECT username, password FROM Staff";
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(selectStaffQuery, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            string username = reader.GetString(0);
-                            string password = reader.GetString(1);
-                            Staff[username] = password;
+                            while (reader.Read())
+                            {
+                                string username = reader.GetString(0);
+                                string password = reader.GetString(1);
+                                Staff[username] = password;
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not load staff credentials: " + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         
